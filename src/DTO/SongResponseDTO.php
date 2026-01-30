@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\DTO\Response;
+namespace App\DTO;
 
 use App\Entity\Song;
 use Symfony\Component\Serializer\Annotation\SerializedName;

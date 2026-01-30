@@ -3,10 +3,12 @@
 
 namespace App\Controller;
 
-use App\DTO\Response\ClientResponseDTO;
-use App\DTO\Response\StatisticsByYearDTO;
-use App\DTO\Response\StatisticsByTypeDTO;
-use App\DTO\Response\StatisticsItemDTO;
+require_once __DIR__ . '/../DTO/StatisticsDTO.php';
+
+use App\DTO\ClientResponseDTO;
+use App\DTO\StatisticsByYearDTO;
+use App\DTO\StatisticsByTypeDTO;
+use App\DTO\StatisticsItemDTO;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

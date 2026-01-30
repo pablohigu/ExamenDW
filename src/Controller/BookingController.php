@@ -3,8 +3,8 @@
 
 namespace App\Controller;
 
-use App\DTO\Request\BookingRequestDTO;
-use App\DTO\Response\BookingResponseDTO;
+use App\DTO\BookingRequestDTO;
+use App\DTO\BookingResponseDTO;
 use App\Entity\Booking;
 use App\Repository\ActivityRepository;
 use App\Repository\BookingRepository;

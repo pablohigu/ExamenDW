@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Response;
+namespace App\DTO;
 
 use App\Entity\Booking;
 use Symfony\Component\Serializer\Annotation\SerializedName;

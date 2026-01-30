@@ -1,8 +1,8 @@
 <?php
-
+// Fuerza el tipado estricto: evita conversiones automáticas de tipos y asegura integridad de datos.
 declare(strict_types=1);
 
-namespace App\DTO\Response;
+namespace App\DTO;
 
 use App\Entity\Activity;
 use Symfony\Component\Serializer\Annotation\SerializedName;

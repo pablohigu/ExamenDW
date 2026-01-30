@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\Response\ActivityResponseDTO;
+use App\DTO\ActivityResponseDTO;
 use App\Repository\ActivityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
