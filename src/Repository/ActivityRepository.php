@@ -20,6 +20,8 @@ class ActivityRepository extends ServiceEntityRepository
     }
 
     /**
+     * Busca actividades aplicando filtros, ordenación y paginación.
+     * Utiliza un objeto Criteria para evitar una lista larga de argumentos.
      * @return array{data: Activity[], total: int}
      */
     public function findByCriteria(\App\DTO\Criteria\ActivityCriteria $criteria): array {
@@ -33,7 +35,7 @@ class ActivityRepository extends ServiceEntityRepository
 
         // Filtro onlyfree (AND lógico si ya hay filtro de tipo)
         if ($criteria->onlyFree) {
-            // Subquery o Join para contar bookings
+            //  Join para contar bookings
             $qb->leftJoin('a.bookings', 'b')
                ->groupBy('a.id')
                ->having('COUNT(b.id) < a.maxParticipants');

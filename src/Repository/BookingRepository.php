@@ -18,6 +18,10 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    /**
+     * Cuenta cuántas reservas tiene un cliente en la misma semana que la fecha dada.
+     * Útil para limitar reservas semanales (ej. usuarios Standard).
+     */
     public function countBookingsForClientInWeek(Client $client, \DateTimeInterface $date): int
     {
         // Calcular inicio (Lunes) y fin (Domingo) de la semana de la actividad
@@ -36,6 +40,10 @@ class BookingRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * Obtiene estadísticas agregadas (minutos totales, núm actividades) agrupadas por Año y Tipo.
+     * Utiliza SQL nativo (DBAL) para realizar la agregación de forma eficiente.
+     */
     public function getStatisticsForClient(int $clientId): array
     {
         $conn = $this->getEntityManager()->getConnection();

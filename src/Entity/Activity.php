@@ -25,7 +25,7 @@ class Activity
     private ?int $maxParticipants = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $type = self::TYPE_BODYPUMP; // BodyPump | Spinning | Core
+    private ?string $type = self::TYPE_BODYPUMP; 
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateStart = null;

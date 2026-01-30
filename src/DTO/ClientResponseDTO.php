@@ -36,7 +36,7 @@ class ClientResponseDTO
         }
 
         if ($includeStats && $statsData) {
-            $this->activityStatistics = $statsData; // Array of StatisticsByYearDTO
+            $this->activityStatistics = $statsData; 
         }
     }
 }

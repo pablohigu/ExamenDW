@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 // Clase contenedora para las estructuras de estadísticas anidadas del YAML
 class StatisticsDTO
 {
-    // Estructura interna para serialización
+    
 }
 
 class StatisticsItemDTO 
@@ -30,7 +30,7 @@ class StatisticsItemDTO
 class StatisticsByTypeDTO
 {
     public string $type;
-    public array $statistics = []; // Array of StatisticsItemDTO
+    public array $statistics = []; 
 
     public function __construct(string $type, StatisticsItemDTO $stats)
     {
@@ -44,7 +44,7 @@ class StatisticsByYearDTO
     public int $year;
     
     #[SerializedName('statistics_by_type')]
-    public array $statisticsByType = []; // Array of StatisticsByTypeDTO
+    public array $statisticsByType = []; 
 
     public function __construct(int $year)
     {
