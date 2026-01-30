@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -25,7 +24,7 @@ class ClientController extends AbstractController
     ) {
     }
 
-    #[Route('/{id}', name: 'get_client', methods: ['GET'])]
+    #[Route('/{id}', name: 'get_client', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(int $id, Request $request): JsonResponse
     {
         // 1. Obtener Cliente [cite: 85-87]
