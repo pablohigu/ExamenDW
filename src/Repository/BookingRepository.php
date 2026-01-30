@@ -25,8 +25,11 @@ class BookingRepository extends ServiceEntityRepository
     public function countBookingsForClientInWeek(Client $client, \DateTimeInterface $date): int
     {
         // Calcular inicio (Lunes) y fin (Domingo) de la semana de la actividad
-        $startOfWeek = (clone $date)->modify('monday this week')->setTime(0, 0, 0);
-        $endOfWeek = (clone $date)->modify('sunday this week')->setTime(23, 59, 59);
+        // Calcular inicio (Lunes) y fin (Domingo) de la semana de la actividad
+        // 'N' devuelve 1 para lunes y 7 para domingo (ISO-8601)
+        $dayOfWeek = (int) $date->format('N');
+        $startOfWeek = (clone $date)->modify('-' . ($dayOfWeek - 1) . ' days')->setTime(0, 0, 0);
+        $endOfWeek = (clone $startOfWeek)->modify('+6 days')->setTime(23, 59, 59);
 
         return $this->createQueryBuilder('b')
             ->select('count(b.id)')
@@ -42,7 +45,7 @@ class BookingRepository extends ServiceEntityRepository
 
     /**
      * Obtiene estadísticas agregadas (minutos totales, núm actividades) agrupadas por Año y Tipo.
-     * Utiliza SQL nativo (DBAL) para realizar la agregación de forma eficiente.
+     * Utiliza SQL nativo (DBAL) para realizar la agregación de forma eficiente., me daba error de sintaxis por el TIMESTAMPDIFF
      */
     public function getStatisticsForClient(int $clientId): array
     {

@@ -44,8 +44,8 @@ class ActivityController extends AbstractController
         return $this->json([
             'data' => $dtos,
             'meta' => [
-                'page' => $page,
-                'limit' => $pageSize,
+                'page' => $criteria->page,
+                'limit' => $criteria->pageSize,
                 'total-items' => $result['total']
             ]
         ]);
