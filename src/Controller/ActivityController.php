@@ -20,23 +20,18 @@ class ActivityController extends AbstractController
     #[Route('', name: 'get_activities', methods: ['GET'])]
     public function index(Request $request): JsonResponse
     {
-        //Extracción de Query Parameters 
-        $onlyFree = filter_var($request->query->get('onlyfree', true), FILTER_VALIDATE_BOOLEAN);
-        $type = $request->query->get('type');
-        $page = (int) $request->query->get('page', 1);
-        $pageSize = (int) $request->query->get('page_size', 10);
-        $sort = $request->query->get('sort', 'date');
-        $order = $request->query->get('order', 'desc');
-
-        // Consulta a BBDD (Filtros y Paginación)
-        $result = $this->activityRepository->findByFilter(
-            $onlyFree,
-            $type,
-            $page,
-            $pageSize,
-            $sort,
-            $order
+        // Instanciar el DTO de Criterios con los Query Parameters
+        $criteria = new \App\DTO\Criteria\ActivityCriteria(
+            onlyFree: filter_var($request->query->get('onlyfree', true), FILTER_VALIDATE_BOOLEAN),
+            type: $request->query->get('type'),
+            page: (int) $request->query->get('page', 1),
+            pageSize: (int) $request->query->get('page_size', 10),
+            sort: $request->query->get('sort', 'date'),
+            order: $request->query->get('order', 'desc')
         );
+
+        // Consulta a BBDD usando el DTO
+        $result = $this->activityRepository->findByCriteria($criteria);
 
         // Mapeo a DTO
         $dtos = [];

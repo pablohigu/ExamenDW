@@ -9,6 +9,7 @@ use App\Entity\Booking;
 use App\Repository\ActivityRepository;
 use App\Repository\BookingRepository;
 use App\Repository\ClientRepository;
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,15 +60,15 @@ class BookingController extends AbstractController
         // Validaciones de Negocio
 
         // Plazas suficientes
-        if ($activity->getBookings()->count() >= $activity->getMaxParticipants()) {
+        if ($activity->isFull()) {
             return $this->json(['code' => 400, 'description' => 'No free places available'], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($client->getType() === 'standard') {
+        if ($client->isStandard()) {
            
             $bookingsThisWeek = $this->bookingRepository->countBookingsForClientInWeek($client, $activity->getDateStart());
             
-            if ($bookingsThisWeek >= 2) {
+            if ($bookingsThisWeek >= Client::MAX_BOOKINGS_STANDARD) {
                 return $this->json(['code' => 400, 'description' => 'Standard users limit reached (max 2/week)'], Response::HTTP_BAD_REQUEST);
             }
         }

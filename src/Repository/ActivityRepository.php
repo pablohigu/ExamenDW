@@ -22,24 +22,17 @@ class ActivityRepository extends ServiceEntityRepository
     /**
      * @return array{data: Activity[], total: int}
      */
-    public function findByFilter(
-        bool $onlyFree,
-        ?string $type,
-        int $page,
-        int $pageSize,
-        string $sort,
-        string $order
-    ): array {
+    public function findByCriteria(\App\DTO\Criteria\ActivityCriteria $criteria): array {
         $qb = $this->createQueryBuilder('a');
 
         // Filtro por tipo
-        if ($type) {
+        if ($criteria->type) {
             $qb->andWhere('a.type = :type')
-               ->setParameter('type', $type);
+               ->setParameter('type', $criteria->type);
         }
 
         // Filtro onlyfree (AND lógico si ya hay filtro de tipo)
-        if ($onlyFree) {
+        if ($criteria->onlyFree) {
             // Subquery o Join para contar bookings
             $qb->leftJoin('a.bookings', 'b')
                ->groupBy('a.id')
@@ -47,15 +40,15 @@ class ActivityRepository extends ServiceEntityRepository
         }
 
         // Ordenación
-        $sortField = match ($sort) {
+        $sortField = match ($criteria->sort) {
             'date' => 'a.dateStart',
             default => 'a.dateStart',
         };
-        $qb->orderBy($sortField, strtoupper($order));
+        $qb->orderBy($sortField, strtoupper($criteria->order));
 
         // Paginación
-        $qb->setFirstResult(($page - 1) * $pageSize)
-           ->setMaxResults($pageSize);
+        $qb->setFirstResult(($criteria->page - 1) * $criteria->pageSize)
+           ->setMaxResults($criteria->pageSize);
 
         $paginator = new Paginator($qb, true);
 

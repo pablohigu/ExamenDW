@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
 {
+    public const TYPE_BODYPUMP = 'BodyPump';
+    public const TYPE_SPINNING = 'Spinning';
+    public const TYPE_CORE = 'Core';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,7 +25,7 @@ class Activity
     private ?int $maxParticipants = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $type = 'BodyPump'; // BodyPump | Spinning | Core
+    private ?string $type = self::TYPE_BODYPUMP; // BodyPump | Spinning | Core
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateStart = null;
@@ -107,5 +111,10 @@ class Activity
     public function getBookings(): Collection
     {
         return $this->bookings;
+    }
+
+    public function isFull(): bool
+    {
+        return $this->bookings->count() >= $this->maxParticipants;
     }
 }

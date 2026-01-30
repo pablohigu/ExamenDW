@@ -11,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {
+    public const TYPE_STANDARD = 'standard';
+    public const TYPE_PREMIUM = 'premium';
+    public const MAX_BOOKINGS_STANDARD = 2;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,7 +27,7 @@ class Client
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
-    private ?string $type = 'standard'; // standard | premium
+    private ?string $type = self::TYPE_STANDARD; // standard | premium
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Booking::class)]
     private Collection $bookings;
@@ -74,5 +78,15 @@ class Client
     public function getBookings(): Collection
     {
         return $this->bookings;
+    }
+
+    public function isStandard(): bool
+    {
+        return $this->type === self::TYPE_STANDARD;
+    }
+
+    public function isPremium(): bool
+    {
+        return $this->type === self::TYPE_PREMIUM;
     }
 }
