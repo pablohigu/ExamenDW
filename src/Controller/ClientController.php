@@ -20,6 +20,7 @@ class ClientController extends AbstractController
 {
     public function __construct(
         private readonly ClientRepository $clientRepository,
+        private readonly \App\Repository\BookingRepository $bookingRepository,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
@@ -54,24 +55,8 @@ class ClientController extends AbstractController
      */
     private function calculateStatistics(int $clientId): array
     {
-        $conn = $this->entityManager->getConnection();
-
-        // SQL Cruda para máxima eficiencia y agrupamiento complejo
-        // Asumimos que la duración es (date_end - date_start) en minutos.
-        $sql = '
-            SELECT 
-                YEAR(a.date_start) as year_val,
-                a.type as type_val,
-                COUNT(b.id) as num_activities,
-                SUM(TIMESTAMPDIFF(MINUTE, a.date_start, a.date_end)) as num_minutes
-            FROM booking b
-            JOIN activity a ON b.activity_id = a.id
-            WHERE b.client_id = :clientId
-            GROUP BY year_val, type_val
-            ORDER BY year_val DESC, type_val ASC
-        ';
-
-        $resultSet = $conn->executeQuery($sql, ['clientId' => $clientId])->fetchAllAssociative();
+        // Usar el método del repositorio en lugar de SQL raw en el controlador
+        $resultSet = $this->bookingRepository->getStatisticsForClient($clientId);
 
         // Estructurar datos para el DTO anidado
         $statsByYear = [];
@@ -85,7 +70,7 @@ class ClientController extends AbstractController
 
             $statItem = new StatisticsItemDTO(
                 (string)$row['num_activities'],
-                (string)$row['num_minutes'] // [cite: 92]
+                (string)$row['num_minutes'] 
             );
 
             $statByType = new StatisticsByTypeDTO($row['type_val'], $statItem);

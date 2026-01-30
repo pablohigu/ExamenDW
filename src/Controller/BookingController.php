@@ -34,7 +34,7 @@ class BookingController extends AbstractController
     #[Route('', name: 'create_booking', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        // 1. Deserialización JSON -> DTO [cite: 60]
+        // Deserialización JSON
         try {
             /** @var BookingRequestDTO $dto */
             $dto = $this->serializer->deserialize($request->getContent(), BookingRequestDTO::class, 'json');
@@ -42,13 +42,13 @@ class BookingController extends AbstractController
             return $this->json(['code' => 400, 'description' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
         }
 
-        // 2. Validación de formato de datos
+        // Validación de formato de datos
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
             return $this->json(['code' => 400, 'description' => (string) $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        // 3. Obtención de Entidades [cite: 62]
+        // Obtención de Entidades
         $activity = $this->activityRepository->find($dto->activityId);
         $client = $this->clientRepository->find($dto->clientId);
 
@@ -56,24 +56,21 @@ class BookingController extends AbstractController
             return $this->json(['code' => 400, 'description' => 'Client or Activity not found'], Response::HTTP_BAD_REQUEST);
         }
 
-        // 4. Validaciones de Negocio
+        // Validaciones de Negocio
 
-        // A) Plazas suficientes [cite: 63]
+        // Plazas suficientes
         if ($activity->getBookings()->count() >= $activity->getMaxParticipants()) {
             return $this->json(['code' => 400, 'description' => 'No free places available'], Response::HTTP_BAD_REQUEST);
         }
 
-        // B) Lógica de tipo de usuario (Standard vs Premium) [cite: 64-66]
         if ($client->getType() === 'standard') {
-            // Contar reservas de la semana de la actividad objetivo
+           
             $bookingsThisWeek = $this->bookingRepository->countBookingsForClientInWeek($client, $activity->getDateStart());
             
             if ($bookingsThisWeek >= 2) {
                 return $this->json(['code' => 400, 'description' => 'Standard users limit reached (max 2/week)'], Response::HTTP_BAD_REQUEST);
             }
         }
-
-        // 5. Persistencia
         $booking = new Booking();
         $booking->setActivity($activity);
         $booking->setClient($client);
@@ -81,7 +78,6 @@ class BookingController extends AbstractController
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
 
-        // 6. Respuesta [cite: 67]
         return $this->json(new BookingResponseDTO($booking));
     }
 }

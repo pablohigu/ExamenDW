@@ -35,4 +35,24 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getStatisticsForClient(int $clientId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT 
+                YEAR(a.date_start) as year_val,
+                a.type as type_val,
+                COUNT(b.id) as num_activities,
+                SUM(TIMESTAMPDIFF(MINUTE, a.date_start, a.date_end)) as num_minutes
+            FROM booking b
+            JOIN activity a ON b.activity_id = a.id
+            WHERE b.client_id = :clientId
+            GROUP BY year_val, type_val
+            ORDER BY year_val DESC, type_val ASC
+        ';
+
+        return $conn->executeQuery($sql, ['clientId' => $clientId])->fetchAllAssociative();
+    }
 }
