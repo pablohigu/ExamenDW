@@ -13,7 +13,7 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // 1. Clients
+        // Clients
         $clients = [];
         // 5 Standard Clients
         for ($i = 1; $i <= 5; $i++) {
@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
             $clients[] = $client;
         }
 
-        // 2. Activities & Songs
+        // Activities & Songs
         $activities = [];
         $types = [Activity::TYPE_BODYPUMP, Activity::TYPE_SPINNING, Activity::TYPE_CORE];
         
@@ -70,30 +70,8 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 3. Bookings
-        // Fill some bookings randomly
-        foreach ($activities as $activity) {
-            // Randomly book 0 to 5 clients per activity
-            $participants = rand(0, 5);
-            
-            // Shuffle clients to pick random ones
-            shuffle($clients);
-            
-            for ($j = 0; $j < $participants; $j++) {
-                $client = $clients[$j];
-                
-                // Simplified logic: just add booking without strictly checking 2/week limit here 
-                // because we want some data. In real app, standard users might be invalidly booked if we are not careful,
-                // but for fixtures it is often okay to seed data directly. 
-                // However, to be "safe", let's prioritize Premium for bulk bookings or just allow it.
-                // Since this goes directly to DB, it bypasses Controller checks, which is fine for initial state stats.
-                
-                $booking = new Booking();
-                $booking->setActivity($activity);
-                $booking->setClient($client);
-                $manager->persist($booking);
-            }
-        }
+       
+        
 
         $manager->flush();
     }
