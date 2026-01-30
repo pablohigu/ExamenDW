@@ -15,12 +15,12 @@ class StatisticsDTO
 class StatisticsItemDTO 
 {
     #[SerializedName('num_activities')]
-    public int $numActivities;
+    public string $numActivities;
 
     #[SerializedName('num_minutes')]
-    public int $numMinutes;
+    public string $numMinutes;
 
-    public function __construct(int $numActivities, int $numMinutes)
+    public function __construct(string $numActivities, string $numMinutes)
     {
         $this->numActivities = $numActivities;
         $this->numMinutes = $numMinutes;

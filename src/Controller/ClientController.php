@@ -84,8 +84,8 @@ class ClientController extends AbstractController
             }
 
             $statItem = new StatisticsItemDTO(
-                (int)$row['num_activities'],
-                (int)$row['num_minutes'] // [cite: 92]
+                (string)$row['num_activities'],
+                (string)$row['num_minutes'] // [cite: 92]
             );
 
             $statByType = new StatisticsByTypeDTO($row['type_val'], $statItem);
